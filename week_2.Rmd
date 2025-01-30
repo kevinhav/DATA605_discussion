@@ -1,0 +1,60 @@
+---
+title: "week_2"
+output: html_document
+---
+
+# Week 2 Discussion
+
+## Prompt
+
+Factorization (LU and LDU Decomposition)
+
+This week, we explore LU decomposition and LDU decomposition, which are foundational techniques in linear algebra with applications in solving systems of equations, numerical analysis, and optimization.
+
+Exercise Selection and Solution:
+Pick one of the exercises from the assigned readings on LU and LDU decomposition. Solve the exercise to the best of your ability. If you encounter any challenges, describe them in detail, providing enough context for the group to understand and offer assistance.
+
+Important Guidelines:
+Do not attach files to your discussion post.
+Directly share your code, commentary, and any figures in the text box to ensure accessibility for everyone.
+
+Engagement Rules:
+You must post your own thread before viewing or commenting on others' posts. This ensures independent effort before collaboration.
+
+In addition to solving the exercise, reflect on the following question:
+
+How does LU or LDU decomposition simplify solving linear systems compared to directly applying Gaussian elimination?
+
+Provide an example (it can be theoretical) that illustrates the advantages of these methods, such as efficiency, modularity, or numerical stability.
+Discuss how these methods might extend to broader applications, such as engineering simulations, graphics, or data science.
+
+
+## Response
+
+### Exercise
+
+### LU Decomposition vs. pure Gaussian elimination
+
+[](https://www.cl.cam.ac.uk/teaching/1314/NumMethods/supporting/mcmaster-kiruba-ludecomp.pdf) 
+
+The main benefit of LU decomposition and pure Gaussian elimination is that we can be agnostic as to the values of the constants of the system when we see consistent coefficients.
+
+Gaussian eliminations must be applied to an augmented matrix, meaning, the operations we perform on the coefficients, we must also perform on the constants.
+
+With LU decomposition, we are simply breaking down the coefficient matrix into two different systems, $L$ and $U$ respectively, and solving those systems independently.
+
+When we replace coefficient matrix $A$ with $LU$, we find that the only remaining unknowns in our system are the constants themselves.
+
+This is useful because we now have *a single solution* for a linear system with consistent coefficients and changing constants.
+
+At first, this might not seem useful; why are we adding extra steps?
+
+One answer is **time series data**, where we want to monitor the same linear system over time. In this case, we can hold our coefficients static and use the same $LU$ matrix to calculate the constants period over period.
+
+Another is **computational efficiency**. With LU decomposition, we can calculate the $LU$ matrix once, and reuse it. Compare this to trying to dynamically solve a very large systems using a Gaussian elimination approach.
+
+Finally, we must also consider **numerical stability**. We must remember that computers have limited precision, and precision errors quickly compound. Gaussian elimination has many more opportunities to produce precision errors given the sheer number of operations it performs, when compared to LU decomp where we're really only operating on the main diagonal of the matrix.
+
+
+Another is computational 
+
