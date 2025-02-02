@@ -1,6 +1,9 @@
 ---
 title: "week_2"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Week 2 Discussion
@@ -9,52 +12,161 @@ output: html_document
 
 Factorization (LU and LDU Decomposition)
 
-This week, we explore LU decomposition and LDU decomposition, which are foundational techniques in linear algebra with applications in solving systems of equations, numerical analysis, and optimization.
+This week, we explore LU decomposition and LDU decomposition, which are
+foundational techniques in linear algebra with applications in solving
+systems of equations, numerical analysis, and optimization.
 
-Exercise Selection and Solution:
-Pick one of the exercises from the assigned readings on LU and LDU decomposition. Solve the exercise to the best of your ability. If you encounter any challenges, describe them in detail, providing enough context for the group to understand and offer assistance.
+Exercise Selection and Solution: Pick one of the exercises from the
+assigned readings on LU and LDU decomposition. Solve the exercise to the
+best of your ability. If you encounter any challenges, describe them in
+detail, providing enough context for the group to understand and offer
+assistance.
 
-Important Guidelines:
-Do not attach files to your discussion post.
-Directly share your code, commentary, and any figures in the text box to ensure accessibility for everyone.
+Important Guidelines: Do not attach files to your discussion post.
+Directly share your code, commentary, and any figures in the text box to
+ensure accessibility for everyone.
 
-Engagement Rules:
-You must post your own thread before viewing or commenting on others' posts. This ensures independent effort before collaboration.
+Engagement Rules: You must post your own thread before viewing or
+commenting on others' posts. This ensures independent effort before
+collaboration.
 
 In addition to solving the exercise, reflect on the following question:
 
-How does LU or LDU decomposition simplify solving linear systems compared to directly applying Gaussian elimination?
+How does LU or LDU decomposition simplify solving linear systems
+compared to directly applying Gaussian elimination?
 
-Provide an example (it can be theoretical) that illustrates the advantages of these methods, such as efficiency, modularity, or numerical stability.
-Discuss how these methods might extend to broader applications, such as engineering simulations, graphics, or data science.
-
+Provide an example (it can be theoretical) that illustrates the
+advantages of these methods, such as efficiency, modularity, or
+numerical stability. Discuss how these methods might extend to broader
+applications, such as engineering simulations, graphics, or data
+science.
 
 ## Response
 
 ### Exercise
 
+I used Archetype B from [Beezer](http://linear.ups.edu/html/archetype-B.html) as my example this week.
+
+$-7x_1-6x_2-12x_3 = 33$
+$5x_1+5x_2+7x_3=24$
+$x_1+4x_3=5$
+
+Our steps to perform LU decomposition;
+1. Calculate $U$ using elementary row operations, stored as elementary matrices $E$
+2. Calculate $L$, using the inverse of each $E$
+3. Assert $A=L\cdotU$
+
+We'll be doing this "by hand" to get a good feel for the process. There are R libraries such as `Matrix`, `matlib`, and `pracma`.
+
+```{r}
+# Step 0: Setup
+
+# Create coefficient matrix A from our LSE
+A <- matrix(c(-7, -6, -1,
+              5, 5, 7,
+              1, 0, 4), nrow=3, byrow=TRUE)
+
+print(A)
+```
+
+```{r}
+# Step 1 Perform RRFE to get Upper triangle
+# by performing row ops as elementary matrices
+
+# R3 <-> R1
+E_1 <- matrix(c(0, 0, 1,
+                0, 1, 0,
+                1, 0, 0), nrow=3, byrow=TRUE)
+# -5R1 + R2
+E_2 <- matrix(c(1, 0, 0,
+                -5, 1, 0,
+                0, 0, 1), nrow=3, byrow=TRUE)
+# 1/5 R2
+E_3 <- matrix(c(1, 0, 0,
+                0, (1/5), 0,
+                0, 0, 1), nrow=3, byrow=TRUE)
+# 7R1 + R3
+E_4 <- matrix(c(1, 0, 0,
+                0, 1, 0,
+                7, 0, 1), nrow=3, byrow=TRUE)
+# 6R2 + R3
+E_5 <- matrix(c(1, 0, 0,
+                0, 1, 0,
+                0, 6, 1), nrow=3, byrow=TRUE)
+
+# Leaves a very small float remainder! Not sure why
+# Given this should just be integer addition
+
+# 1/11.4R3
+E_6 <- matrix(c(1, 0, 0,
+                0, 1, 0,
+                0, 0, (1/11.4)), nrow=3, byrow=TRUE)
+
+# Calculate upper triangle
+U <- E_6 %*% E_5 %*% E_4 %*% E_3 %*% E_2 %*% E_1 %*% A
+
+print(U)
+```
+
+A quick note before we proceed - $E_5$ actually left me with a extremely small float value ($8^{e-18}$) instead of a zero in $A_{32}$. This got dropped following $E_6$, but it was a good practical example of why we care about Gaussian elimination vs LU decomposition. More on this below.
+
+```{r}
+# Step 2 Invert the E matrices and take the dot product
+# to compute Lower triangle
+L <- solve(E_1) %*% solve(E_2) %*% solve(E_3) %*% solve(E_4) %*% solve(E_5) %*% solve(E_6)
+
+print(L)
+```
+
+```{r}
+# Step 3 Assert A = LU
+
+all.equal(A, (L%*%U))
+```
+
+**For discussion**
+- Why is my lower triangle `L` in the wrong "shape" (genuinely - I don't know!)?
+- What packages have you found useful in computing reduced row echelon form? Have you encountered the permutation matrix ($A=PLU$)?
+- How would you take this one step further into LDU Decomposition?
+
 ### LU Decomposition vs. pure Gaussian elimination
 
-[](https://www.cl.cam.ac.uk/teaching/1314/NumMethods/supporting/mcmaster-kiruba-ludecomp.pdf) 
+[
+](https://www.cl.cam.ac.uk/teaching/1314/NumMethods/supporting/mcmaster-kiruba-ludecomp.pdf)
 
-The main benefit of LU decomposition and pure Gaussian elimination is that we can be agnostic as to the values of the constants of the system when we see consistent coefficients.
+The main benefit of LU decomposition and pure Gaussian elimination is
+that we can be agnostic as to the values of the constants of the system
+when we see consistent coefficients.
 
-Gaussian eliminations must be applied to an augmented matrix, meaning, the operations we perform on the coefficients, we must also perform on the constants.
+Gaussian eliminations must be applied to an augmented matrix, meaning,
+the operations we perform on the coefficients, we must also perform on
+the constants.
 
-With LU decomposition, we are simply breaking down the coefficient matrix into two different systems, $L$ and $U$ respectively, and solving those systems independently.
+With LU decomposition, we are simply breaking down the coefficient
+matrix into two different systems, $L$ and $U$ respectively, and solving
+those systems independently.
 
-When we replace coefficient matrix $A$ with $LU$, we find that the only remaining unknowns in our system are the constants themselves.
+When we replace coefficient matrix $A$ with $LU$, we find that the only
+remaining unknowns in our system are the constants themselves.
 
-This is useful because we now have *a single solution* for a linear system with consistent coefficients and changing constants.
+This is useful because we now have *a single solution* for a linear
+system with consistent coefficients and changing constants.
 
 At first, this might not seem useful; why are we adding extra steps?
 
-One answer is **time series data**, where we want to monitor the same linear system over time. In this case, we can hold our coefficients static and use the same $LU$ matrix to calculate the constants period over period.
+One answer is **time series data**, where we want to monitor the same
+linear system over time. In this case, we can hold our coefficients
+static and use the same $LU$ matrix to calculate the constants period
+over period.
 
-Another is **computational efficiency**. With LU decomposition, we can calculate the $LU$ matrix once, and reuse it. Compare this to trying to dynamically solve a very large systems using a Gaussian elimination approach.
+Another is **computational efficiency**. With LU decomposition, we can
+calculate the $LU$ matrix once, and reuse it. Compare this to trying to
+dynamically solve a very large systems using a Gaussian elimination
+approach.
 
-Finally, we must also consider **numerical stability**. We must remember that computers have limited precision, and precision errors quickly compound. Gaussian elimination has many more opportunities to produce precision errors given the sheer number of operations it performs, when compared to LU decomp where we're really only operating on the main diagonal of the matrix.
-
-
-Another is computational 
-
+Finally, we must also consider **numerical stability**. We must remember
+that computers have limited precision, and precision errors quickly
+compound. Gaussian elimination has many more opportunities to produce
+precision errors given the sheer number of operations it performs, when
+compared to LU decomp where we're really only operating on the main
+diagonal of the matrix.
