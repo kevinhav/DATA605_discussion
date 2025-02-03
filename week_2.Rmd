@@ -1,8 +1,10 @@
 ---
 title: "week_2"
-output: html_document
-editor_options: 
-  markdown: 
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  markdown:
     wrap: 72
 ---
 
@@ -121,7 +123,7 @@ print(L)
 ```{r}
 # Step 3 Assert A = LU
 
-all.equal(A, (L%*%U))
+print(all.equal(A, (L%*%U)))
 ```
 
 **For discussion**
