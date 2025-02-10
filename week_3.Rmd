@@ -1,0 +1,14 @@
+---
+title: "week_3"
+author: "Kevin Havis"
+date: "2025-02-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Week 3: Eigen values
+
+
