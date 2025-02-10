@@ -11,4 +11,150 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Week 3: Eigen values
 
+>Find the eigenvalues, eigenspaces, algebraic multiplicities and geometric multiplicities for the matrix below. It is possible to do all these computations by hand, and it would be instructive to do so. 
+
+$$
+\begin{equation*}
+C=
+\begin{bmatrix}
+ -1 & 2 \\
+ -6 & 6
+\end{bmatrix}
+\end{equation*}
+$$
+
+While this question is not particularly difficult, I chose it because it is very thorough and can be done end-to-end by hand, which makes it useful when trying to understand the fine-grained steps required to calculate eigenspace.
+
+Our steps to find eigenspace and related attributes;
+
+1. Calculate the characteristic polynomial using the determinant
+2. Determine the roots of the characteristic polynomial
+3. Using the roots, define the eigenvalues and algebraic multiplicities
+4. Calculate eigenspace using our newly found eigenvalues
+5. Determine geometric multiplicities based on the dimension of eigenspace
+
+
+Our characteristic polynomial is calculated as 
+$$
+\begin{align}
+p_{C}({x})=det({C-xI_n})\\
+p_{C}({x})=det({\begin{bmatrix}
+ -1 & 2 \\
+ -6 & 6
+\end{bmatrix}-x\begin{bmatrix}
+ 1 & 0 \\
+ 0 & 1
+\end{bmatrix}})\\
+
+p_{C}({x})=det({\begin{bmatrix}
+ -1-x & 2 \\
+ -6 & 6-x
+\end{bmatrix}})\\
+
+p_C(x)=(-1-x)(6-x) - (-12)\\
+
+p_C(x) = -1(6-x) + -x(6-x) + 12\\
+
+p_C(x) = -6 + x + -6x + x^2 + 12\\
+
+p_C(x) = x^2 - 5x + 6\\
+
+\end{align}
+$$
+Now we find the roots of this polynomial. Our options for $x$ must be $(2, 3)$ in order for our polynomial to be true (set equal to zero), so our roots are $x=3, x=2$. These are also our **eigenvalues**. Since they each only appear once in our factored polynomial, we can also conclude the algebraic multiplicity is just one.
+
+$$
+p_C(x) = x^2 - 5x + 6\\
+p_C(x) = (x-3)(x-2) -5x +6
+$$
+Finally, we use our eigenvalues to compute the eigenspace.To do this, we compute $C-xI$ and find the reduced row echelon form for each value of $x$. We then set the system equal to zero to make it a homogenous system, which allows us to then express the eigenspace as the null space.
+
+$$
+\begin{align}
+\lambda = 2\\
+C-\lambda I = 
+\begin{bmatrix}
+-1 & 2\\
+-6 & 6
+\end{bmatrix} -
+\begin{bmatrix}
+2 & 0\\
+0 & 2
+\end{bmatrix} = 
+\begin{bmatrix}
+-3 & 2\\
+-6 & 4
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \frac{-2}{3}\\
+0 & 0
+\end{bmatrix}
+
+\end{align}
+$$
+$$
+\begin{align}
+\lambda = 3\\
+C-\lambda I = 
+\begin{bmatrix}
+-1 & 2\\
+-6 & 6
+\end{bmatrix} -
+\begin{bmatrix}
+3 & 0\\
+0 & 3
+\end{bmatrix} = 
+\begin{bmatrix}
+-4 & 2\\
+-6 & 3
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \frac{-1}{2}\\
+0 & 0
+\end{bmatrix}
+
+\end{align}
+$$
+Now with our vectors whose span describes eigenspace, we can calculate the nullspace by setting each of them equal to zero. Since $x_2$ is a free variable, we will let it be one and solve for $x_1$
+
+$$
+\begin{align}
+x_1 - \frac{2}{3}x_2 = 0\\
+x_1 = \frac{2}{3}(1)\\
+\overrightarrow{x}_1 = (\frac{2}{3}, 1)
+\end{align}
+
+$$
+
+$$
+\begin{align}
+x_1 - \frac{1}{2}x_2 = 0\\
+x_1 = \frac{1}{2}(1)\\
+\overrightarrow{x}_1 = (\frac{1}{2}, 1)
+\end{align}
+
+$$
+
+So our nullspace is the span of $\overrightarrow{x}_1 = (\frac{1}{2}, 1)$ and $\overrightarrow{x}_1 = (\frac{2}{3}, 1)$, and given we've found our eigenspace to be two dimensional,  we can say that the geometric multiplicities are 1.
+
+###
+
+Challenges
+
+- I honestly forgot quite a bit about algebra with polynomials. Was good to have a refresher!
+- I'm still not comfortable putting all these individual pieces together, which indicates I need more practice
+- Homogenous systems seem like an important tool for many theorems, but it always surprises me when I can use them. Something I could develop better intution on.
+
+
+
+```{r}
+\lambda
+```
+
+
+```{r}
+C <- matrix(c(
+
+
+```
 
