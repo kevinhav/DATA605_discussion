@@ -146,15 +146,3 @@ Challenges
 - Homogenous systems seem like an important tool for many theorems, but it always surprises me when I can use them. Something I could develop better intution on.
 
 
-
-```{r}
-\lambda
-```
-
-
-```{r}
-C <- matrix(c(
-
-
-```
-

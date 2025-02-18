@@ -1,0 +1,116 @@
+---
+title: "week_4"
+author: "Kevin Havis"
+date: "2025-02-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Exercise LT.C30
+
+Define the linear transformation
+
+$$
+T: \mathbb{C}^3\to \mathbb{C}^2, T {\begin{bmatrix}x_1\\x_2\\x_3 \end{bmatrix}} = \begin{bmatrix} 2x_1 - x_2 + 5x_3\\-4x_1 + 2x_2 -10x_3 \end{bmatrix}
+$$
+
+Compute the preimages,$T^{-1}( \begin{bmatrix}2\\3 \end{bmatrix})$ and $T^{-1}( \begin{bmatrix}4\\-8 \end{bmatrix})$
+
+### Solution
+
+This question is essentially asking, "Given we see these vectors after a given transformation, what vectors could they have been prior to the transformation?" This is the preimage. 
+
+To answer this, we simply have to answer "for what vectors does the transformation $\begin{bmatrix} 2x_1 - x_2 + 5x_3\\-4x_1 + 2x_2 -10x_3 \end{bmatrix}$ equal $T^{-1}( \begin{bmatrix}2\\3 \end{bmatrix})$ and $T^{-1}( \begin{bmatrix}4\\-8 \end{bmatrix})$ respectively"?
+
+We do this by setting up a transformation matrix for each, then performing row operations to reduce each resulting matrix in to reduced row echelon form. From there, we can define the solution set.
+
+```{r}
+library(matlib)
+
+c30 <- function(){
+  
+  # Establish the transformation matrix
+  T_matrix <- matrix(c(2, -1, 5,
+                       -4, 2, -10), nrow=2, ncol=3, byrow=TRUE)
+  
+  # Set the transformation matrix equal to inverse preimage
+  pre_image_1 <- cbind(T_matrix, c(2,3))
+  
+  # Use RREF to identify solution set
+  rref_1 <- echelon(pre_image_1)
+  
+  pre_image_2 <- cbind(T_matrix, c(4, -8))
+  
+  rref_2 <- echelon(pre_image_2)
+  
+  print(rref_1)
+  print(rref_2)
+}
+
+c30()
+```
+
+For the first preimage, we can see that we only have a single pivot column ($x_1$), however the system as a whole is inconsistent (remember we're looking at an augmented matrix). As such, there is no solution set.
+
+The second preiamge is consistent and has only one dependent variable, $x_1$. Thus, letting $x_2, x_3 \in \mathbb{C}$, the solution set is $2 + x_1 - 0.5x_2 + 2.5x_3$
+
+## Exercise LT.T30
+
+Suppose that $T: U→V$ is a linear transformation. Say that two vectors from $U$, $x$ and $y$, are related exactly when $T(x)=T(y)$ in V. Prove the three properties of an equivalence relation on $U$: (a) for any $x\in U$, $x$ is related to $x$, (b) if $x$ is related to $y$, then $y$ is related to $x$, and (c) if $x$ is related to $y$ and $y$ is related to $z$, then $x$ is related to $z$.
+
+### Solution
+
+This question seemed very challenging until I realized what it was really asking; we should demonstrate that equality between vectors is preserved after a similar transformation is performed.
+
+With this understanding, we can simply give ourselves three equal vectors, transform them using the same transformation matrix, and compare them after the fact. To demonstrate this, I've allowed for random integers to be used for the vectors and the matrix.
+
+```{r}
+t30 <- function(t_matrix, vec_x, vec_y, vec_z){
+  
+  # Transform x
+  t_x <- t_matrix %*% vec_x
+  
+  # Transform y
+  t_y <- t_matrix %*% vec_y
+  
+  # Transform z
+  t_z <- t_matrix %*% vec_z
+  
+  # transformed x is equal to x
+  print(all.equal(vec_x, vec_x))
+  
+  # transformed x is equal to y
+  print(all.equal(vec_x, vec_y))
+  
+  # transformed y is equal to z
+  print(all.equal(vec_y, vec_z))
+  
+  # transformed x is equal to z
+  print(all.equal(vec_x, vec_z))
+  
+}
+```
+
+```{r}
+# Randomize a large vector
+rand_vec <- sample(1:100000, size=10)
+
+# Establish equality prior to transformation
+x <- rand_vec
+y <- rand_vec
+z <- rand_vec 
+
+# Define random transformation matrix
+A <- matrix(sample(1:100000, size=30))
+
+# Assert equality
+t30(A, x, y , z)
+
+```
+
+
