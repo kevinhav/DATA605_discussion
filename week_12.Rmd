@@ -1,0 +1,32 @@
+---
+title: "week_12"
+output: html_document
+---
+
+```{r}
+library(tidyverse, ggplot2)
+```
+
+```{r}
+data <- read_csv('BostonHousing.csv')
+```
+
+```{r}
+ggplot(data, aes(x=medv, y=lstat)) +
+  geom_point() +
+  title("")
+```
+
+
+```{r}
+model <- lm (medv ~ I(lstat^2) + tax*crim + chas, data=data)
+```
+
+```{r}
+summary(model)
+```
+
+```{r}
+plot(model)
+```
+
